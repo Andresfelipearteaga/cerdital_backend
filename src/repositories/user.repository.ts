@@ -8,9 +8,18 @@ export const findUserByEmail = async (email: string) => {
     return rows[0];
 };
 
+export const changePassword = async (email: string, password: string) => {
+    console.log(email, password);
+    const { rowCount }  = await pool.query (
+        "UPDATE usuarios SET contrasena = $1 WHERE correo = $2", [password, email]
+        );
+
+    return rowCount;
+};
+
 export const createUser = async (
     fullName: string,
-    phone: number,
+    phone: string,
     email: string,
     password: string,
 ) => {
