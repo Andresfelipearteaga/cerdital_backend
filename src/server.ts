@@ -7,6 +7,7 @@ import { checkConnection } from './config/db';
 
 //auth
 import authRoutes from './routes/auth.routes';
+import batchRoutes from './routes/batch.routes';
 
 dotenv.config();
 
@@ -17,11 +18,9 @@ app.use(morgan('dev'));
 app.use(helmet());
 app.use(cors());
 
-app.get('/', (req, res) => {
-    res.send('Hello World!');
-});
 
 app.use('/api/auth', authRoutes);
+app.use('/api/batch', batchRoutes);
 
 
 checkConnection().then(() => {
