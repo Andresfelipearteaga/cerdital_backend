@@ -48,11 +48,18 @@ export const updatedBatch = async (
     batch_id: number,
     race: string,
     average_weight: number,
+    // current_pig: number,
+    // pig_registered: number
 ) => {
+    // const { rowCount } = await pool.query(
+    //     "UPDATE lotes SET current_pig = $1, pig_registered = $2 raza = $3, peso_promedio = $4 WHERE id_lote = $5",
+    //      [current_pig, pig_registered, race, average_weight, batch_id],
+    // );
+
+    //SERÁ BUENO EDITAR EL NUMERO DE CERDOS, HAY QUE HACER DOBLE CONSULTA A LA BASE DE DATOS
     const { rowCount } = await pool.query(
         "UPDATE lotes SET raza = $1, peso_promedio = $2 WHERE id_lote = $3",
-        [race, average_weight, batch_id],
+         [race, average_weight, batch_id],
     );
-
     return rowCount;
 };

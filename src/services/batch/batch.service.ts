@@ -36,9 +36,13 @@ export const editBatchUser = async (
     batch_id: number,
     race: string,
     average_weight: number,
+    // number_of_pigs: number
 ) => {
     if (!race) throw new Error("No hay raza");
     if (!average_weight) throw new Error("No hay peso promedio");
+    // if (!number_of_pigs) throw new Error("No hay Cerdos")
+
+    
 
     const updatedBatchRow = await updatedBatch(batch_id, race, average_weight);
     if (updatedBatchRow === 0) throw new Error("Error al actualizar el lote");
