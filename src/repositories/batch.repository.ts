@@ -1,5 +1,14 @@
 import pool from "../config/db";
 
+//Obtener un lote en especifico
+export const getOneBatchById = async (batch_id: number) =>  {
+    const { rows } = await pool.query(
+        "SELECT * FROM lotes WHERE id_lote = $1",
+        [batch_id],
+    );
+    return rows
+}; 
+
 //Obtener lotes por id de usuario
 export const getBatchById = async (user_id: number) => {
     const { rows } = await pool.query(
@@ -20,7 +29,7 @@ export const createBatch = async (
 ) => {
     const date = new Date();
     const { rows } = await pool.query(
-        "INSERT INTO lotes (id_usuario, nombre_lote, numero_cerdos_registrado, numeros_cerdos_actuales, raza, peso_promedio, fecha_creacion) VALUES ($1, $2, $3, $4, $5, $6, $7)",
+        "INSERT INTO lotes (id_usuario, nombre_lote, numero_cerdos_registrado, numeros_cerdos_actuales, raza, peso_promedio, fecha_creacion) VALUES ($1, $2, $3, $4, $5, $6, $7) returning id_lote",
         [
             user_id,
             batch_name,
@@ -44,22 +53,56 @@ export const deleteBatch = async (batch_id: number) => {
 };
 
 //editar lote por id de lote
+//Prueba de consulta dinámica para evaluar rendimiento y recursos
+//Se edita solo el o los campo recibidos
 export const updatedBatch = async (
-    batch_id: number,
-    race: string,
-    average_weight: number,
-    // current_pig: number,
-    // pig_registered: number
+    batch_id: number,   
+    race?: string,
+    average_weight?: number,
+    number_of_pigs?: number,
+    newCurrent?: number,
+    status?: boolean
+   
 ) => {
-    // const { rowCount } = await pool.query(
-    //     "UPDATE lotes SET current_pig = $1, pig_registered = $2 raza = $3, peso_promedio = $4 WHERE id_lote = $5",
-    //      [current_pig, pig_registered, race, average_weight, batch_id],
-    // );
 
-    //SERÁ BUENO EDITAR EL NUMERO DE CERDOS, HAY QUE HACER DOBLE CONSULTA A LA BASE DE DATOS
-    const { rowCount } = await pool.query(
-        "UPDATE lotes SET raza = $1, peso_promedio = $2 WHERE id_lote = $3",
-         [race, average_weight, batch_id],
-    );
-    return rowCount;
+    console.log(number_of_pigs, newCurrent);
+    const fields: string[] = [];
+    const values: any[] = [];
+
+    if (race !== undefined) {
+        fields.push("raza = $"+(fields.length+1));
+        values.push(race);
+    }
+    if (average_weight !== undefined) {
+        fields.push("peso_promedio = $"+(fields.length+1));
+        values.push(average_weight);
+    }
+    if (number_of_pigs !== undefined) {
+        fields.push("numero_cerdos_registrado = $"+(fields.length+1));
+        values.push(number_of_pigs);
+    }
+    if (newCurrent !== undefined) {
+        fields.push("numeros_cerdos_actuales = $"+(fields.length+1));
+        values.push(newCurrent);
+    }
+    if (status !== undefined) {
+        fields.push("activo = $"+(fields.length+1));
+        values.push(status);
+    }
+
+    // Si no hay campos que actualizar, salir
+    if (fields.length === 0) {
+        return 0;
+    }
+  
+    values.push(batch_id);
+    const query = `UPDATE lotes SET ${fields.join(", ")} WHERE id_lote = $${values.length} RETURNING numeros_cerdos_actuales`;
+
+    const { rowCount, rows } = await pool.query(query, values);
+    console.log('rowCount', rowCount)
+    console.log('rows', rows)
+    const current_pig_in_db = rows[0].numeros_cerdos_actuales;
+    console.log('current_pig', current_pig_in_db)
+
+    return { rowCount, current_pig_in_db };
 };

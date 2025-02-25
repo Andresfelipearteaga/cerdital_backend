@@ -1,10 +1,10 @@
 import pool from "../config/db";
 
 //Obtener alimentacion por id de usuario
-export const getFeedingById = async (batch_id: number) => {
+export const getFeedingById = async (user_id: number) => {
     const { rows } = await pool.query(
-        "SELECT * FROM alimentacion WHERE id_lote = $1",
-        [batch_id],
+        "SELECT * FROM alimentacion WHERE id_usuario = $1",
+        [user_id],
     );
     return rows;
 };
@@ -16,10 +16,11 @@ export const createFeeding = async (
     feeding_mark: string,
     amount: number,
     cost: number,
+    user_id: number,
 ) => {
     const date = new Date();
     const { rows } = await pool.query(
-        "INSERT INTO alimentacion (id_lote, tipo_alimento, marca_alimento, cantidad_kg, costo_unitario, fecha_creacion) VALUES ($1, $2, $3, $4, $5, $6)",
+        "INSERT INTO alimentacion (id_lote, tipo_alimento, marca_alimento, cantidad_kg, costo_unitario, fecha_creacion, id_usuario) VALUES ($1, $2, $3, $4, $5, $6, $7)",
         [
             batch_id,
             feeding_type,
@@ -27,6 +28,7 @@ export const createFeeding = async (
             amount,
             cost,
             date,
+            user_id,
         ],
     );
     return rows[0];
@@ -44,14 +46,15 @@ export const deleteFeeding = async (feeding_id: number) => {
 //editar alimentacion por id de alimentacion
 export const updatedFeeding = async (
     feeding_id: number,
-    // feeding_type: string, SE PUEDE EDITAR EL TIPO DE ALIMENTO? SE PUEDE EDITAR Y MOSTRARLO DE TITULO EN LA INTERFAZ
+    feeding_type: string,
     feeding_mark: string,
     amount: number,
     cost: number,
 ) => {
     const { rowCount } = await pool.query(
-        "UPDATE alimentacion SET marca_alimento = $1, cantidad_kg = $2, consto_unitario = 3$ WHERE id_lote = $4",
-        [feeding_mark, amount, cost, feeding_id],
+        "UPDATE alimentacion SET tipo_alimento = $1, marca_alimento = $2, cantidad_kg = $3, costo_unitario = $4 WHERE id_alimentacion = $5",
+        [feeding_type,feeding_mark, amount, cost, feeding_id],
     );
     return rowCount;
 };
+

@@ -1,3 +1,5 @@
+import { Meta } from "./meta.interface";
+
 export interface Batch {
     id: number;
     batch_name: string;
@@ -7,11 +9,6 @@ export interface Batch {
     average_weight: number;
     mortality: number;
     date_created: string;
-}
-
-export interface Meta {
-    status: number;
-    message: string;
 }
 
 export interface BatchResponse {

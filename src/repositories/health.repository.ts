@@ -1,10 +1,10 @@
 import pool from "../config/db";
 
 //Obtener salud por id de usuario
-export const getHealthById = async (batch_id: number) => {
+export const getHealthById = async (user_id: number) => {
     const { rows } = await pool.query(
-        "SELECT * FROM salud_tratamiento WHERE id_lote = $1",
-        [batch_id],
+        "SELECT * FROM salud_tratamiento WHERE id_usuario = $1",
+        [user_id],
     );
     return rows;
 };
@@ -14,15 +14,17 @@ export const createHealth = async (
     batch_id: number,
     disease: string,
     treatment: string,
+    user_id: number
 ) => {
     const date = new Date();
     const { rows } = await pool.query(
-        "INSERT INTO salud_tratamiento (id_lote, enfermedad, tratamiento, fecha_creacion) VALUES ($1, $2, $3, $4)",
+        "INSERT INTO salud_tratamiento (id_lote, enfermedad, tratamiento, fecha_creacion, id_usuario) VALUES ($1, $2, $3, $4, $5)",
         [
             batch_id,
             disease,
             treatment,
             date,
+            user_id,
         ],
     );
     return rows[0];
@@ -45,7 +47,7 @@ export const updatedHealth = async (
     treatment: string,
 ) => {
     const { rowCount } = await pool.query(
-        "UPDATE salud_tratamiento SET id_lote = $1, enfermedad = $2, tratamiento = 3$ WHERE id_health = $4",
+        "UPDATE salud_tratamiento SET id_lote = $1, enfermedad = $2, tratamiento = $3 WHERE id_tratamiento = $4", 
         [batch_id, disease, treatment, health_id],
     );
     return rowCount;

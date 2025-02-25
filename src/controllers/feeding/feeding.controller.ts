@@ -3,8 +3,8 @@ import {
     getFeedingByIdUser, createFeedingUser, editFeedingUser
 } from "../../services/feeding/feeding.service";
 
-import { FeedingResponse, Meta } from "../../interfaces/feeding.interface";
-
+import { FeedingResponse } from "../../interfaces/feeding.interface";
+import { Meta } from "../../interfaces/meta.interface";
 
 export const getFeedingById = async (req: Request, res: Response) => {
     const { user_id } = req.params;
@@ -14,7 +14,7 @@ export const getFeedingById = async (req: Request, res: Response) => {
             feeding: data,
             meta: {
                 status: 200,
-                message: "Alimentación encontrado",
+                message: "Alimentación encontrada",
             },
         };
         res.status(200).json(response);
@@ -28,9 +28,9 @@ export const getFeedingById = async (req: Request, res: Response) => {
 };
 
 export const createFeeding = async (req: Request, res: Response) => {
-    const { batch_id, feeding_type, feeding_mark, amount, cost } = req.body;
+    const { batch_id, feeding_type, feeding_mark, amount, cost, user_id } = req.body;
     try {
-        const data = await createFeedingUser(batch_id, feeding_type, feeding_mark, amount, cost);
+        const data = await createFeedingUser(batch_id, feeding_type, feeding_mark, amount, cost, user_id);
         const response: Meta = {
             status: 200,
             message: data,

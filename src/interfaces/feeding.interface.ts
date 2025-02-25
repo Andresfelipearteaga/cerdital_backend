@@ -1,3 +1,5 @@
+import { Meta } from "./meta.interface";
+
 export interface Feeding {
     id: number;
     batch_id: string;
@@ -6,11 +8,6 @@ export interface Feeding {
     amount: number;
     const: number;
     date_created: string;
-}
-
-export interface Meta {
-    status: number;
-    message: string;
 }
 
 export interface FeedingResponse {

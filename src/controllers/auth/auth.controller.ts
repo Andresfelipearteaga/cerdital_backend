@@ -7,7 +7,8 @@ import {
     deleteUserToken,
 } from "../../services/auth/auth.service";
 
-import { UserResponse, Meta } from "../../interfaces/user.interface";
+import { UserResponse } from "../../interfaces/user.interface";
+import { Meta } from "../../interfaces/meta.interface";
 
 export const register = async (req: Request, res: Response) => {
     const { fullName, phone, email, password } = req.body;

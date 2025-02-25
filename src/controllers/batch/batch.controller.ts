@@ -3,8 +3,8 @@ import {
     createBatchUser, getBatchByIdUser, editBatchUser,
 } from "../../services/batch/batch.service";
 
-import { BatchResponse, Meta } from "../../interfaces/batch.interface";
-
+import { BatchResponse } from "../../interfaces/batch.interface";
+import { Meta } from "../../interfaces/meta.interface";
 
 export const getBatchById = async (req: Request, res: Response) => {
     const { user_id } = req.params;
@@ -47,10 +47,10 @@ export const createBatch = async (req: Request, res: Response) => {
 };
 
 export const editBatch = async (req: Request, res: Response) => {
-    const { race, average_weight } = req.body;
+    const { race, average_weight, number_of_pigs, pig_registered, current_pig } = req.body;
     const { batch_id } = req.params;
     try {
-        const data = await editBatchUser(Number(batch_id), race, average_weight);
+        const data = await editBatchUser(Number(batch_id), race, average_weight, number_of_pigs, pig_registered, current_pig);
         const response: Meta = {
             status: 200,
             message: data,

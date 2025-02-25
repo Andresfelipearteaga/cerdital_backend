@@ -5,7 +5,7 @@ const router = Router();
 
 router.post("/createFeeding", authMiddleware, createFeeding);
 router.get("/getFeedingById/:user_id", authMiddleware, getFeedingById);
-router.put("/editFeeding/:batch_id", authMiddleware, editFeeding);
+router.put("/editFeeding/:feeding_id", authMiddleware, editFeeding);
 
 
 export default router;

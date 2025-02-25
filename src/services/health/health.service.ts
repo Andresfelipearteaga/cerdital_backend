@@ -10,15 +10,18 @@ export const createHealthUser = async (
     batch_id: number,
     disease: string,
     treatment: string,
+    user_id: number
 ) => {
     if (!batch_id) throw new Error("No hay lote seleccionado");
     if (!disease) throw new Error("No hay enfermedad");
     if (!treatment) throw new Error("No hay tratamiento");
+    if (!user_id) throw new Error("No hay usuario");
 
     const healthCreated = await createHealth(
         batch_id,
         disease,
         treatment,
+        user_id,
     );
     if (healthCreated === 0) throw new Error("Error al crear el tratamiento");
     return "tratamiento creado exitosamente";
