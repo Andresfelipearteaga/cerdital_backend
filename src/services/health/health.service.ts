@@ -1,4 +1,4 @@
-import { createHealth, getHealthById, updatedHealth } from "../../repositories/health.repository";
+import { createHealth, getHealthById, updatedHealth, deleteHealth } from "../../repositories/health.repository";
 
 export const getHealthByIdUser = async (user_id: number) => {
     const health = await getHealthById(user_id);
@@ -25,6 +25,13 @@ export const createHealthUser = async (
     );
     if (healthCreated === 0) throw new Error("Error al crear el tratamiento");
     return "tratamiento creado exitosamente";
+};
+
+export const deleteHealthUser = async (health_id: number) => {
+    if (!health_id) throw new Error("No hay tratamiento seleccionado");
+    const deletedHealth = await deleteHealth(health_id);
+    if (deletedHealth === 0) throw new Error("Error al eliminar el tratamiento");
+    return "tratamiento eliminado exitosamente";
 };
 
 export const editHealthUser = async (

@@ -1,7 +1,10 @@
 import {
     getProgressById,
     updateProgress,
+    createProgress
 } from "../../repositories/progress.repository";
+
+import { Progress, ListProgressLote } from "../../interfaces/progress.interface";
 
 import {
     getOneBatchById,
@@ -11,9 +14,38 @@ import {
 export const getProgressByIdUser = async (user_id: number) => {
     if (!user_id) throw new Error("Sin usuario");
     const progress = await getProgressById(user_id);
+    console.log(progress);
     if (progress.length < 1) throw new Error("No has creado ningún progreso");
-    return progress;
+    const transformed = tranformProgress(progress);
+    console.log(JSON.stringify(transformed, null, 2));
+    return transformed;
 };
+
+export const createProgressUser = async (
+    batch_id: number,
+    date_weight: string,
+    weekly_average_weight: number,
+    mortality: number,
+    user_id: number
+) => {
+    if (!batch_id) throw new Error("No hay lote seleccionado");
+    if (!user_id) throw new Error("No hay usuario");
+    if (!date_weight) throw new Error("No hay fecha de peso");
+    if (!weekly_average_weight) throw new Error("No hay peso promedio");
+    if (mortality === undefined || mortality === null) {
+        throw new Error("No hay mortalidad");
+    }
+    const progressCreated = await createProgress(
+        batch_id,
+        date_weight,
+        weekly_average_weight,
+        mortality,
+        user_id
+    );
+    if (progressCreated === 0) throw new Error("Error al crear el progreso");
+    return "Progreso creado exitosamente";
+};
+
 
 export const updateProgressUser = async (
     progress_id: number,
@@ -103,3 +135,29 @@ export const updateProgressUser = async (
 
     return "Progreso actualizado exitosamente";
 };
+
+
+function tranformProgress(progress: any[]): Progress {
+    const lotesMap = new Map<number, ListProgressLote>();
+    
+    progress.forEach(item => { 
+    if (!lotesMap.has(item.id_lote)) {
+        lotesMap.set(item.id_lote, {
+            batch_id: item.id_lote,
+            mortality: item.mortalidad,
+            goal_average_weight: item.peso_promedio_objetivo,
+            record: []
+        });
+    }
+    lotesMap.get(item.id_lote)!.record.push({
+        progress_id: item.id_progreso,
+        date_weight: item.fecha_pesaje,
+        weekly_average_weight: item.record_peso_promedio
+    })
+})
+
+return {progress: Array.from(lotesMap.values())}
+
+};
+
+

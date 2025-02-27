@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { getHealthByIdUser, createHealthUser, editHealthUser } from "../../services/health/health.service";
+import { getHealthByIdUser, createHealthUser, editHealthUser, deleteHealthUser } from "../../services/health/health.service";
 
 import { HealthResponse } from "../../interfaces/health.interface";
 import { Meta } from "../../interfaces/meta.interface";
@@ -29,6 +29,25 @@ export const createHealth = async (req: Request, res: Response) => {
     const { batch_id, disease, treatment, user_id } = req.body;
     try {
         const data = await createHealthUser(batch_id, disease, treatment, user_id);
+        const response: Meta = {
+            status: 200,
+            message: data,
+            };
+
+        res.status(200).json(response);
+    } catch (error: any) {
+        const response: Meta = {
+            status: 400,
+            message: error.message,
+            };
+        res.status(400).json(response);
+    }
+};
+
+export const deleteHealth = async (req: Request, res: Response) => {
+    const { health_id } = req.params;
+    try {
+        const data = await deleteHealthUser(Number(health_id));
         const response: Meta = {
             status: 200,
             message: data,

@@ -1,15 +1,21 @@
-import { Meta } from "./meta.interface";
 
-export interface Progress {
+
+
+interface Record {
     progress_id: number;
-    bbatch_id: number;
     date_weight: Date;
     weekly_average_weight: number;
-    mortality: number;
-    user_id: number;
 }
 
-export interface ProgressResponse {
-    progress: Progress[];
-    meta: Meta;
+export interface ListProgressLote {
+    batch_id: number;
+    mortality: number;
+    goal_average_weight: number;
+    record: Record[];
 }
+
+export interface Progress {
+    progress: ListProgressLote[];
+}
+
+

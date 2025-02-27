@@ -12,12 +12,18 @@ export const getProgressById = async (user_id: number) => {
 //Crear progreso de un usuario
 export const createProgress = async (
     batch_id: number,
+    date_weight: string,
+    weekly_average_weight: number,
+    mortality: number,
     user_id: number
 ) => {
     const { rows } = await pool.query(
-        "INSERT INTO progreso (id_lote, fecha_pesaje, record_peso_promedio, mortalidad, id_usuario) VALUES ($1, DEFAULT, DEFAULT, DEFAULT, $2)",
+        "INSERT INTO progreso (id_lote, fecha_pesaje, record_peso_promedio, mortalidad, id_usuario) VALUES ($1, $2, $3, $4, $5)",
         [
             batch_id,
+            date_weight,
+            weekly_average_weight,
+            mortality,
             user_id
         ],
     );

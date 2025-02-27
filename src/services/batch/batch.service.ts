@@ -4,7 +4,6 @@ import {
     updatedBatch,
 } from "../../repositories/batch.repository";
 import { createCost } from "../../repositories/cost.repository";
-import { createProgress } from "../../repositories/progress.repository";
 
 export const getBatchByIdUser = async (user_id: number) => {
     const batch = await getBatchById(user_id);
@@ -39,8 +38,6 @@ export const createBatchUser = async (
     if (batchCreated === 0) throw new Error("Error al crear el lote");
     const costCreated = await createCost(batch_id, user_id);
     if (costCreated === 0) throw new Error("Error al crear el costo asociado");
-    const progressCreated = await createProgress(batch_id, user_id);
-    if (progressCreated === 0) throw new Error("Error al crear el progreso");
 
     return "Lote, costo y progreso creados exitosamente";
 };
